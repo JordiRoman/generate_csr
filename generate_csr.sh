@@ -1,4 +1,4 @@
-#!/bin/bash -xv
+#!/bin/bash 
 
 COUNTRY="ES"
 STATE="Barcelona"
@@ -13,8 +13,15 @@ SSL_KEY_BITS="4096"
 CFG_FILENAME="./req.conf"
 CSR_FILENAME="${HOSTNAME}.csr"
 KEY_FILENAME="${HOSTNAME}.key"
+VRF_FILENAME="${HOSTNAME}_verify.sh"
 
-
+# 
+echo "Generate CSR KEY and util's for the next domains:"
+for i in ${HOSTNAME} ${ALT_HOSTNAMES}
+do
+	echo "	- ${i}"
+done
+read -t 30 -p "Press <enter> to continue or wait 30 seconds"
 # Generate config for the new CSR and KEY
 cat <<EOF >${CFG_FILENAME}
 [req]
@@ -43,11 +50,24 @@ do
 done
 
 # Generate CSR & KEY
-openssl req -new -out ${CSR_FILENAME} -newkey rsa:${SSL_KEY_BITS} -nodes -sha256 -keyout ${KEY_FILENAME} -config ${CFG_FILENAME}
-
+if [ -f ${KEY_FILENAME} ] || [ -f ${CSR_FILENAME} ]
+then
+	echo "ERROR: KEY or CSR Exists!!!"
+	read -t 30 -p "Press <enter> to continue or wait 30 seconds"
+else
+	openssl req -new -out ${CSR_FILENAME} -newkey rsa:${SSL_KEY_BITS} \
+		-nodes -sha256 -keyout ${KEY_FILENAME} -config ${CFG_FILENAME}
+fi
 
 # check CSR
 openssl req -in ${CSR_FILENAME} -text | less
 
 # check la key
 openssl rsa -in ${KEY_FILENAME} -check
+
+# Script to verify the install
+cat <<EOF > ${VRF_FILENAME}
+openssl s_client -connect ${HOSTNAME}:443 | openssl x509 -noout -dates
+EOF
+chmod a+x ${VRF_FILENAME}
+
