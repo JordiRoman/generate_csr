@@ -1,0 +1,4 @@
+*.csr
+*.key
+*_verify.sh
+req.conf
