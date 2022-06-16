@@ -11,9 +11,10 @@ ALT_HOSTNAMES="hostname2.domain.tld hostname3.domain.tld"
 SSL_KEY_BITS="4096"
 
 CFG_FILENAME="./req.conf"
-CSR_FILENAME="${HOSTNAME}.csr"
-KEY_FILENAME="${HOSTNAME}.key"
-VRF_FILENAME="${HOSTNAME}_verify.sh"
+CSR_FILENAME="${HOSTNAME//./_}.csr"
+KEY_FILENAME="${HOSTNAME//.//_}.key"
+VRF_FILENAME="${HOSTNAME//./_}_verify.sh"
+LOCAL_SERVER_FILENAME="${HOSTNAME//./_}_server.sh"
 
 # 
 echo "Generate CSR KEY and util's for the next domains:"
@@ -65,9 +66,28 @@ openssl req -in ${CSR_FILENAME} -text | less
 # check la key
 openssl rsa -in ${KEY_FILENAME} -check
 
+# Script to launch local server
+cat <<EOF > ${LOCAL_SERVER_FILENAME}
+if [ ! -Z $1 ]
+then
+	PORT=$1
+else
+	PORT=3000
+fi
+openssl s_server -accept ${PORT} -key ${KEY_FILENAME} -cert ${CERT_FILENAME} &
+EOF
+
 # Script to verify the install
 cat <<EOF > ${VRF_FILENAME}
-openssl s_client -connect ${HOSTNAME}:443 | openssl x509 -noout -dates
+SERVER=""
+if [ ! -Z $1 ]
+then
+	SERVER=$1
+else
+	SERVER=${HOSTNAME}:443
+fi
+
+openssl s_client -connect \${SERVER} | openssl x509 -noout -dates
 EOF
 chmod a+x ${VRF_FILENAME}
 
