@@ -74,7 +74,7 @@ then
 else
 	PORT=3000
 fi
-openssl s_server -accept \${PORT} -key ${KEY_FILENAME} -cert ${CERT_FILENAME} &
+openssl s_server -accept \${PORT} -key ${KEY_FILENAME} -cert ${CERT_FILENAME}
 EOF
 chmod a+x ${LOCAL_SERVER_FILENAME}
 
