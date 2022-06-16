@@ -68,7 +68,7 @@ openssl rsa -in ${KEY_FILENAME} -check
 
 # Script to launch local server
 cat <<EOF > ${LOCAL_SERVER_FILENAME}
-if [ ! -Z \$1 ]
+if [ ! -z \$1 ]
 then
 	PORT=\$1
 else
@@ -82,7 +82,7 @@ chmod a+x ${LOCAL_SERVER_FILENAME}
 cat <<EOF > ${VRF_FILENAME}
 PORT=""
 SERVER=""
-if [ ! -Z \$1 ]
+if [ ! -z \$1 ]
 then
 	SERVER=localhost
 	PORT=\$1
@@ -94,4 +94,3 @@ fi
 openssl s_client -connect \${SERVER}:\${PORT} | openssl x509 -noout -dates
 EOF
 chmod a+x ${VRF_FILENAME}
-
