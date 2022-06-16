@@ -80,16 +80,18 @@ chmod a+x ${LOCAL_SERVER_FILENAME}
 
 # Script to verify the install
 cat <<EOF > ${VRF_FILENAME}
+PORT=""
 SERVER=""
-
 if [ ! -Z $1 ]
 then
-	SERVER=\$1
+	SERVER=localhost
+	PORT=\$1
 else
-	SERVER=${HOSTNAME}:443
+	SERVER=${HOSTNAME}
+	PORT=443
 fi
 
-openssl s_client -connect \${SERVER} | openssl x509 -noout -dates
+openssl s_client -connect \${SERVER}:\${PORT} | openssl x509 -noout -dates
 EOF
 chmod a+x ${VRF_FILENAME}
 
