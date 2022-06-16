@@ -70,11 +70,11 @@ openssl rsa -in ${KEY_FILENAME} -check
 cat <<EOF > ${LOCAL_SERVER_FILENAME}
 if [ ! -Z $1 ]
 then
-	PORT=$1
+	PORT=\$1
 else
 	PORT=3000
 fi
-openssl s_server -accept ${PORT} -key ${KEY_FILENAME} -cert ${CERT_FILENAME} &
+openssl s_server -accept \${PORT} -key ${KEY_FILENAME} -cert ${CERT_FILENAME} &
 EOF
 chmod a+x ${LOCAL_SERVER_FILENAME}
 
@@ -83,7 +83,7 @@ cat <<EOF > ${VRF_FILENAME}
 SERVER=""
 if [ ! -Z $1 ]
 then
-	SERVER=$1
+	SERVER=\$1
 else
 	SERVER=${HOSTNAME}:443
 fi
