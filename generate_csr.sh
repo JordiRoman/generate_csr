@@ -76,6 +76,7 @@ else
 fi
 openssl s_server -accept ${PORT} -key ${KEY_FILENAME} -cert ${CERT_FILENAME} &
 EOF
+chmod a+x ${VRF_FILENAME}
 
 # Script to verify the install
 cat <<EOF > ${VRF_FILENAME}
@@ -89,5 +90,5 @@ fi
 
 openssl s_client -connect \${SERVER} | openssl x509 -noout -dates
 EOF
-chmod a+x ${VRF_FILENAME}
+chmod a+x ${LOCAL_SERVER_FILENAME}
 
