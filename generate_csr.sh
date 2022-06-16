@@ -12,7 +12,7 @@ SSL_KEY_BITS="4096"
 
 CFG_FILENAME="./req.conf"
 CSR_FILENAME="${HOSTNAME//./_}.csr"
-KEY_FILENAME="${HOSTNAME//.//_}.key"
+KEY_FILENAME="${HOSTNAME//./_}.key"
 VRF_FILENAME="${HOSTNAME//./_}_verify.sh"
 LOCAL_SERVER_FILENAME="${HOSTNAME//./_}_server.sh"
 
