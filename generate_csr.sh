@@ -74,13 +74,14 @@ then
 else
 	PORT=3000
 fi
-openssl s_server -accept \${PORT} -key ${KEY_FILENAME} -cert ${CERT_FILENAME}
+openssl s_server -accept \${PORT} -key ${KEY_FILENAME} -cert ${KEY_FILENAME/.key/.pem}
 EOF
 chmod a+x ${LOCAL_SERVER_FILENAME}
 
 # Script to verify the install
 cat <<EOF > ${VRF_FILENAME}
 SERVER=""
+
 if [ ! -Z $1 ]
 then
 	SERVER=\$1
